@@ -512,8 +512,8 @@ class Tigsaw {
         imageScaleThreshold = 0.8,
         stageWidth = document.querySelector(container).offsetWidth,
         stageHeight = document.querySelector(container).offsetHeight,
-        connectSoundSrc = '/static/connectSound.wav',
-        successSoundSrc = '/static/successSound.mp3',
+        connectSoundSrc = 'https://turtlekey.github.io/demo/tigsaw/static/audio/connect.wav',
+        successSoundSrc = 'https://turtlekey.github.io/demo/tigsaw/static/audio/success.mp3',
         
     }) {
         banScrollRefresh();
