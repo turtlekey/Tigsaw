@@ -1,6 +1,7 @@
 Just one simple library for jigsaw.
 
 The idea is from **headbreaker** partially, the code depends on **Konva** heavily. Thanks all of them🙏☕.
+
 ---
 ### Usage
 ```html
@@ -27,5 +28,4 @@ The idea is from **headbreaker** partially, the code depends on **Konva** heavil
 ---
 ### Todo
 - add other shapes.
----
 
