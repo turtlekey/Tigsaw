@@ -86,6 +86,7 @@ class Puzzle extends Konva.Layer {
         columnCount,
         imageSrc,
         placeStyle,
+        stage,
         connectThreshold = 30,
         completeThreshold = 30,
     }) {
@@ -94,10 +95,23 @@ class Puzzle extends Konva.Layer {
         this.columnCount = columnCount;
         this.imageSrc = imageSrc;
         this.placeStyle = placeStyle;
+        this.stage = stage;
         this.connectThreshold = 30;
         this.completeThreshold = 30;
+        this.destroyOther();
+        this.addToStage();
         this.drawPieces();
 
+    }
+
+
+    addToStage = () => {
+        this.stage.add(this);
+    }
+
+
+    destroyOther = () => {
+        this.stage.destroyChildren();    
     }
 
 
@@ -125,7 +139,6 @@ class Puzzle extends Konva.Layer {
             this.setFocusStyle();
             this.setAdjustPosition();
             this.setPlaceStyle();
-            this.connectListener();
             this.completeListener();
         };
     }
@@ -134,16 +147,23 @@ class Puzzle extends Konva.Layer {
     setPlaceStyle = () => {
         if (this.placeStyle === 'scattered') {
             this.setScattered();
+            this.connectListener();
         } else if (this.placeStyle === 'gatheredCenter') {
             this.setGatheredCenter();
+            this.exchangeListener();
+            this.removeAdjustPosition();
         } else if (this.placeStyle === 'gatheredTop') {
             this.setGatheredTop();
+            this.connectListener();
         } else if (this.placeStyle === 'gatheredBottom') {
             this.setGatheredBottom();
+            this.connectListener();
         } else if (this.placeStyle === 'gatheredLeft') {
             this.setGatheredLeft();
+            this.connectListener();
         } else if (this.placeStyle === 'gatheredRight') {
             this.setGatheredRight();
+            this.connectListener();
         }
     }
 
@@ -308,6 +328,13 @@ class Puzzle extends Konva.Layer {
                 }
             });
         });
+    }
+
+
+    removeAdjustPosition = () => {
+        let stage = this.getStage();
+        stage.off('dragmove');
+        stage.draggable(false);
     }
 
 
@@ -483,6 +510,51 @@ class Puzzle extends Konva.Layer {
         }
     }
         
+
+    exchangeListener = () => {
+        let eleConnectSound = document.querySelector('#connectSound');
+        let pieces = this.getPieces();
+        let positivePieceX, positivePieceY;
+        pieces.map((piece) => {
+            piece.on('dragstart', () => {
+                positivePieceX = piece.x();
+                positivePieceY = piece.y();
+            });
+            piece.on('dragend', () => {
+                let _pieces = arrayRemove(pieces, piece);
+                let maxArea = 0;
+                let targetPiece = null;
+                for (let i=0;i<_pieces.length;i++) {
+                    let negativePiece = _pieces[i];
+                    let diffX = piece.scaledWidth - (Math.abs(piece.x() - negativePiece.x()));
+                    let diffY = piece.scaledHeight - (Math.abs(piece.y() - negativePiece.y()));
+                    diffX = diffX < 0 ? 0 : diffX;
+                    diffY = diffY < 0 ? 0 : diffY;
+                    let area = diffX * diffY;
+                    if (area > maxArea) {
+                        maxArea = area;
+                        targetPiece = negativePiece;
+                    }
+                }
+                let diffX = piece.scaledWidth - (Math.abs(piece.x() - positivePieceX));
+                let diffY = piece.scaledHeight - (Math.abs(piece.y() - positivePieceY));
+                diffX = diffX < 0 ? 0 : diffX;
+                diffY = diffY < 0 ? 0 : diffY;
+                let area = diffX * diffY;
+                    
+                if (area > maxArea || targetPiece === null) {
+                    piece.x(positivePieceX);
+                    piece.y(positivePieceY);
+                } else {
+                    piece.x(targetPiece.x());
+                    piece.y(targetPiece.y());
+                    targetPiece.x(positivePieceX);
+                    targetPiece.y(positivePieceY);
+                }
+                eleConnectSound.play();
+            });
+        });
+    }
 }
 
 function insertConnectSound(soundSrc) {
@@ -529,7 +601,6 @@ class Tigsaw {
         this.imageSrc = imageSrc;
         this.drawStage();
         this.drawPuzzle();
-        this.stage.add(this.puzzle);
     }
 
 
@@ -543,12 +614,13 @@ class Tigsaw {
     }
 
 
-    drawPuzzle = () => {
+    drawPuzzle = (rowCount = this.rowCount, columnCount = this.columnCount, imageSrc = this.imageSrc, placeStyle = this.placeStyle) => {
         this.puzzle = new Puzzle({
-            rowCount: this.rowCount,
-            columnCount: this.columnCount,
-            imageSrc: this.imageSrc,
-            placeStyle: this.placeStyle,
+            rowCount: rowCount,
+            columnCount: columnCount,
+            imageSrc: imageSrc,
+            placeStyle: placeStyle,
+            stage: this.stage,
         });
     }
 }

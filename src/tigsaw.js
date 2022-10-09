@@ -32,7 +32,6 @@ class Tigsaw {
         this.imageSrc = imageSrc;
         this.drawStage();
         this.drawPuzzle();
-        this.stage.add(this.puzzle);
     }
 
 
@@ -46,12 +45,13 @@ class Tigsaw {
     }
 
 
-    drawPuzzle = () => {
+    drawPuzzle = (rowCount = this.rowCount, columnCount = this.columnCount, imageSrc = this.imageSrc, placeStyle = this.placeStyle) => {
         this.puzzle = new Puzzle({
-            rowCount: this.rowCount,
-            columnCount: this.columnCount,
-            imageSrc: this.imageSrc,
-            placeStyle: this.placeStyle,
+            rowCount: rowCount,
+            columnCount: columnCount,
+            imageSrc: imageSrc,
+            placeStyle: placeStyle,
+            stage: this.stage,
         });
     }
 }
