@@ -24,8 +24,17 @@ The idea is from **headbreaker** partially, the code depends on **Konva** heavil
 ```
 ---
 ### Change Log
-- 2022-10-09: For the place style 'gatheredCenter', exchange pieces to complete the puzzle other than usual connection method.
+- 2022-10-09: for the place style 'gatheredCenter', exchange pieces to complete the puzzle other than usual connection method.
+- 2022-10-19: recover the absolutePosition of the stage before creating one new puzzle.
 ---
 ### Todo
 - add other shapes.
-
+---
+### Other Tips
+- when it is used in one touch device, banning the functionality of scrolling down to refresh the browser is a common demand, we can do it with the code following.
+```javascript
+document.body.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    }, {passive: false},
+);
+```
