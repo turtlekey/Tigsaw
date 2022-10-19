@@ -20,9 +20,18 @@ class Puzzle extends Konva.Layer {
         this.connectThreshold = 30;
         this.completeThreshold = 30;
         this.destroyOther();
+        this.initStage();
         this.addToStage();
         this.drawPieces();
 
+    }
+
+
+    initStage = () => {
+        this.stage.absolutePosition({
+            x: 0,
+            y: 0,
+        });
     }
 
 

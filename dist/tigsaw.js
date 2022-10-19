@@ -1,17 +1,3 @@
-function banScrollRefresh() {
-    document.body.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        }, {passive: false},
-    );
-}
-
-
-function arrayRemove(arr, item) {
-    return arr.filter((i) => {
-        return i!== item;
-    })
-}
-
 class Piece extends Konva.Rect {
     constructor({
         name = 'piece',
@@ -80,6 +66,12 @@ class Piece extends Konva.Rect {
 
 }
 
+function arrayRemove(arr, item) {
+    return arr.filter((i) => {
+        return i!== item;
+    })
+}
+
 class Puzzle extends Konva.Layer {
     constructor({
         rowCount,
@@ -99,9 +91,18 @@ class Puzzle extends Konva.Layer {
         this.connectThreshold = 30;
         this.completeThreshold = 30;
         this.destroyOther();
+        this.initStage();
         this.addToStage();
         this.drawPieces();
 
+    }
+
+
+    initStage = () => {
+        this.stage.absolutePosition({
+            x: 0,
+            y: 0,
+        });
     }
 
 
@@ -588,7 +589,6 @@ class Tigsaw {
         successSoundSrc = 'https://turtlekey.github.io/demo/tigsaw/static/audio/success.mp3',
         
     }) {
-        banScrollRefresh();
         insertConnectSound(connectSoundSrc);
         insertSuccessSound(successSoundSrc);
         this.container = document.querySelector(container);

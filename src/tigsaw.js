@@ -1,4 +1,3 @@
-import {banScrollRefresh} from './utils.js';
 import {Piece} from './piece.js';
 import {Puzzle} from './puzzle.js';
 import {insertConnectSound, insertSuccessSound} from './sound.js';
@@ -19,7 +18,6 @@ class Tigsaw {
         successSoundSrc = 'https://turtlekey.github.io/demo/tigsaw/static/audio/success.mp3',
         
     }) {
-        banScrollRefresh();
         insertConnectSound(connectSoundSrc);
         insertSuccessSound(successSoundSrc);
         this.container = document.querySelector(container);
